@@ -1,0 +1,17 @@
+﻿@model JobSearch.Models.JobModels.Portfolio
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@if (Model != null)
+{
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
+    @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+    <p>CV : @Model.CV</p>
+}
+else
+{
+    @Html.ActionLink("Create New", "Create")
+}
+
