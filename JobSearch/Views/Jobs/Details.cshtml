@@ -4,7 +4,33 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<style type="text/css">
+    .pos {
+        color: #3366DD;
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    dt {
+        color: #3366DD;
+        font-size: 20px;
+        margin: 5px;
+    }
+
+    dd {
+        font-size: 20px;
+        font-style: italic;
+        margin: 5px;
+    }
+
+    .celo {
+        padding-left:220px;
+    }
+</style>
+
+<h2>Details for the Job</h2>
+<h4 class="pos">Position: @Html.DisplayFor(model => model.Position)</h4>
+
 @{
     int id = 0;
     int role = 0;
@@ -13,22 +39,20 @@
     {
         id = Convert.ToInt32(reqCookies["Id"].ToString());
         role = Convert.ToInt32(reqCookies["Role"].ToString());
-        if (role == 2)
-        {
-            @Html.ActionLink("Create New", "Create")
-        }
     }
 }
-<div>
-    <h4>JobApplications</h4>
-    <hr />
+
+
+<hr />
+<div class="celo">
     <dl class="dl-horizontal">
+
         <dt>
-            @Html.DisplayNameFor(model => model.Position)
+            @Html.DisplayNameFor(model => model.Company)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Position)
+            @Html.DisplayFor(model => model.Company)
         </dd>
 
         <dt>
@@ -56,25 +80,34 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Deadline)
+            @Html.DisplayNameFor(model => model.Salary)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Deadline)
+            @Html.DisplayFor(model => model.Salary)
         </dd>
 
     </dl>
 </div>
 <p>
     @{
-        if (Model.Applications.Contains(id))
+        if (role == 1)
         {
-            <p>You have applied for this job</p>
+            if (Model.Applications.Contains(id))
+            {
+            <p style="font-size:20px;color:forestgreen">You have applied for this job</p>
         }
         else
         {
-            @Html.ActionLink("Apply", "Apply", new { id = Model.JobId })
+            @Html.ActionLink("Apply", "Apply", new { id = Model.JobId }, new { @class = "btn btn-primary" });
+            <br />
         }
-        @Html.ActionLink("View Comments","Index", "Comments")
     }
-</p>
+    else
+    {
+        @Html.ActionLink("View Applicants", "Index", "ApplicantsForJobs")
+        <br />
+    }
+    @Html.ActionLink("View Comments", "Index", "Comments")
+    }
+    </p>

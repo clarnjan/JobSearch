@@ -25,6 +25,9 @@ namespace JobSearch.Controllers
         public ActionResult Details(int id)
         {
             int userid = 0;
+            HttpCookie jobId = new HttpCookie("JobId");
+            jobId["JobId"] = id.ToString();
+            Response.Cookies.Add(jobId);
             HttpCookie reqCookies = Request.Cookies["userInfo"];
             if (reqCookies != null)
             {
@@ -32,9 +35,10 @@ namespace JobSearch.Controllers
                 string FullPart = db.Jobs.Where(x => x.Id == id).FirstOrDefault().FullPart;
                 string Description = db.Jobs.Where(x => x.Id == id).FirstOrDefault().Description;
                 string Qualifications = db.Jobs.Where(x => x.Id == id).FirstOrDefault().Qualifications;
-                DateTime Deadline = db.Jobs.Where(x => x.Id == id).FirstOrDefault().Deadline;
+                string Company = db.Jobs.Where(x => x.Id == id).FirstOrDefault().Company;
+                int Salary = Convert.ToInt32(db.Jobs.Where(x => x.Id == id).FirstOrDefault().Salary);
                 userid = Convert.ToInt32(reqCookies["Id"].ToString());
-                List<AppliesFor>appliesfor=db.AppliesFors.ToList();
+                List<AppliesFor> appliesfor = db.AppliesFors.ToList();
                 List<int> Applications = new List<int>();
                 foreach (AppliesFor a in appliesfor)
                 {
@@ -43,11 +47,12 @@ namespace JobSearch.Controllers
                         Applications.Add(a.Profileid);
                     }
                 }
-                JobApplications model = new JobApplications(id,Position, FullPart, Description, Qualifications, Deadline, Applications);
+                JobApplications model = new JobApplications(id, Position, FullPart, Description, Qualifications, Applications,Company,Salary);
                 return View(model);
             }
             return View();
         }
+
 
         // GET: Jobs/Create
         public ActionResult Create()
@@ -61,7 +66,7 @@ namespace JobSearch.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Position,FullPart,Description,Qualifications,Deadline,ProfileId")] Job job)
+        public ActionResult Create([Bind(Include = "Id,Position,FullPart,Description,Qualifications,ProfileId,Company,Salary")] Job job)
         {
             HttpCookie reqCookies = Request.Cookies["userInfo"];
             if (reqCookies != null)
@@ -131,6 +136,22 @@ namespace JobSearch.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Job job = db.Jobs.Find(id);
+            List<Comment> comments = db.Comments.ToList();
+            foreach (Comment comment in comments)
+            {
+                if (comment.JobId == id)
+                {
+                    db.Comments.Remove(comment);
+                }
+            }
+            List<AppliesFor> applies = db.AppliesFors.ToList();
+            foreach (AppliesFor a in applies)
+            {
+                if (a.JobId == id)
+                {
+                    db.AppliesFors.Remove(a);
+                }
+            }
             db.Jobs.Remove(job);
             db.SaveChanges();
             return RedirectToAction("Index");
