@@ -17,12 +17,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("JobSearch", "Index", "Jobs", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("JobSearch", "AllJobs", "Jobs", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Available Jobs", "Index", "Jobs")</li>
+                    <li>@Html.ActionLink("Available Jobs", "AllJobs", "Jobs")</li>
                 </ul>
+                @{ 
+                    int role = 0;
+                    HttpCookie reqCookies = Request.Cookies["userInfo"];
+                    if (reqCookies != null)
+                    {
+                        role = Convert.ToInt32(reqCookies["Role"].ToString());
+                        if (role == 1) 
+                        { 
+                            <ul class="nav navbar-nav">
+                                <li>@Html.ActionLink("My Applications", "Index", "MyJobs")</li>
+                            </ul>
+                        }
+                    }
+                }
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
