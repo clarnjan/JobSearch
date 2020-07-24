@@ -21,7 +21,7 @@
 # Инсталација
 Симнете го проектот на вашиот компјутер со следната команда
 ```sh
-git clone https://github.com/courtguard/JobSearch.git
+git clone https://github.com/clarnjan/JobSearch.git
 ```
 За да може да го отворите фајлот потребно е да имате инстаирано Visual Studio, верзијата во која работевме е Visual Studio 2019 Community
 
